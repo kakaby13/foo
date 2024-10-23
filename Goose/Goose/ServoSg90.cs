@@ -44,8 +44,6 @@ public class ServoSg90
         _motorPin.Write(PinValue.High);
         MillisecondToWait(motorPulse);
         _motorPin.Write(PinValue.Low);
-        MillisecondToWait(timeToWait);
-        _motorPin.Write(PinValue.Low);
     }
 
     private static double ServoPulseTime(To to)
