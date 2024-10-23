@@ -54,8 +54,8 @@ public class ServoSg90
         return to switch
         {
             To.Left => 2,
-            To.Middle => 1.5,
-            To.Right => 1,
+            To.Middle => 1.2,
+            To.Right => 0.4,
             _ => -1
         };
     }
