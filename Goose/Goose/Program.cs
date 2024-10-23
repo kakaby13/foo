@@ -4,21 +4,28 @@ public class Program
 {
     static void Main(string[] args)
     {
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Empty arguments");
-        }
-        else
-        {
-            Console.WriteLine("Arguments: " + string.Join(" ", args));
-            Run(args[0]);
-        }
+        var servo = new ServoSg90(RaspberryPiGpioPin.GPIO05);
+        // Повернуть сервопривод влево на 5 секунд
+        servo.RotateContinuously(To.Left, 5000);
+
+        // Повернуть сервопривод в середину на 3 секунды
+        servo.RotateContinuously(To.Middle, 3000);
+
+        // Повернуть сервопривод вправо на 2 секунды
+        servo.RotateContinuously(To.Right, 2000);
     }
 
     private static void Run(string argument)
     {
         var servo = new ServoSg90(RaspberryPiGpioPin.GPIO05);
-        
+                    // Повернуть сервопривод влево на 5 секунд
+            servo.RotateContinuously(To.Left, 5000);
+
+            // Повернуть сервопривод в середину на 3 секунды
+            servo.RotateContinuously(To.Middle, 3000);
+
+            // Повернуть сервопривод вправо на 2 секунды
+            servo.RotateContinuously(To.Right, 2000);
         switch (argument)
         {
             case "R":
