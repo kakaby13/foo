@@ -28,12 +28,9 @@ public class ServoSg90
         Rotate(ServoPulseTime(to));
     }
 
-    private void MillisecondToWait(double millisecondsToWait)
+    private static void MillisecondToWait(double millisecondsToWait)
     {
-        var sw = new Stopwatch();
-        var durationTicks = _ticksPerMilliSecond * millisecondsToWait;
-        sw.Start();
-        while (sw.ElapsedTicks < durationTicks) { }
+        Thread.Sleep(Convert.ToInt32(millisecondsToWait));
     }
 
     private void Rotate(double motorPulse)
@@ -43,6 +40,8 @@ public class ServoSg90
 
         _motorPin.Write(PinValue.High);
         MillisecondToWait(motorPulse);
+        _motorPin.Write(PinValue.Low);
+        MillisecondToWait(timeToWait);
         _motorPin.Write(PinValue.Low);
     }
 
