@@ -1,15 +1,62 @@
-﻿using System.Device.Pwm;
-using Iot.Device.ServoMotor;
+﻿using System.Device.Gpio;
+using System.Diagnostics;
 
-ServoMotor servoMotor = new ServoMotor(PwmChannel.Create(0, 0, 50));
-servoMotor.Start();  // Enable control signal.
+namespace Goose;
 
-// Move position.  Pulse width argument is in microseconds.
-servoMotor.WritePulseWidth(1000); // 1ms; Approximately 0 degrees.
-Console.ReadKey();
-servoMotor.WritePulseWidth(1500); // 1.5ms; Approximately 90 degrees.
-Console.ReadKey();
+public class ServoSg90
+{
+    private readonly GpioPin _motorPin;
+    
+    public ServoSg90(RaspberryPiGpioPin pin)
+    {
+        try
+        {
+            var controller = new GpioController();
+            _motorPin = controller.OpenPin(Convert.ToInt32(pin));
+            _motorPin.SetPinMode(PinMode.Output);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("ERROR: GpioInit failed - " + ex);
+        }
+    }
+    
+    public void Rotate(To to)
+    {
+        var servoPulseTime = ServoPulseTime(to);   
+        
+        const double totalPulseTime = 20;
+        var timeToWait = totalPulseTime - servoPulseTime;
 
-servoMotor.WritePulseWidth(2000); // 2ms; Approximately 180 degrees.
+        _motorPin.Write(PinValue.High);
+        WaitMilliseconds(servoPulseTime);
+        _motorPin.Write(PinValue.Low);
+        WaitMilliseconds(timeToWait);
+    }
+    
+    public void RotateContinuously(To to, int durationInMilliseconds)
+    {
+        var stopwatch = Stopwatch.StartNew();
 
-servoMotor.Stop(); // Disable control signal.
+        while (stopwatch.ElapsedMilliseconds < durationInMilliseconds)
+        {
+            Rotate(to);
+        }
+    }
+
+    private static void WaitMilliseconds(double millisecondsToWait)
+    {
+        Thread.Sleep(Convert.ToInt32(millisecondsToWait));
+    }
+    
+    private static double ServoPulseTime(To to)
+    {
+        return to switch
+        {
+            To.Left => 2,
+            To.Middle => 1.2,
+            To.Right => 0.4,
+            _ => -1
+        };
+    }
+}
