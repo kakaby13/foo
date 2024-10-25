@@ -4,7 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        int servoPin = 18; // Пин для подключения сервопривода
+        int servoPin = 12; // Пин для подключения сервопривода
         int frequency = 50; // Частота для SG90 сервопривода
 
         using (var pwmChannel = PwmChannel.Create(0, servoPin, frequency))
