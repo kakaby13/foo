@@ -23,13 +23,13 @@ public class ServoSg90
     
     public void Rotate(To to)
     {
-        var motorPulse = ServoPulseTime(to);   
+        var servoPulseTime = ServoPulseTime(to);   
         
         const double totalPulseTime = 20;
-        var timeToWait = totalPulseTime - motorPulse;
+        var timeToWait = totalPulseTime - servoPulseTime;
 
         _motorPin.Write(PinValue.High);
-        WaitMilliseconds(motorPulse);
+        WaitMilliseconds(servoPulseTime);
         _motorPin.Write(PinValue.Low);
         WaitMilliseconds(timeToWait);
     }
@@ -53,7 +53,7 @@ public class ServoSg90
     {
         return to switch
         {
-            To.Left => 2,
+            To.Left => 1.8,
             To.Middle => 1.2,
             To.Right => 0.4,
             _ => -1
