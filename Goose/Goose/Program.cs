@@ -1,15 +1,29 @@
 ﻿using System.Device.Pwm;
-using Iot.Device.ServoMotor;
 
-ServoMotor servoMotor = new ServoMotor(PwmChannel.Create(0, 0, 50));
-servoMotor.Start();  // Enable control signal.
+class Program
+{
+    static void Main(string[] args)
+    {
+        int servoPin = 18; // Пин для подключения сервопривода
+        int frequency = 50; // Частота для SG90 сервопривода
 
-// Move position.  Pulse width argument is in microseconds.
-servoMotor.WritePulseWidth(1000); // 1ms; Approximately 0 degrees.
-Console.ReadKey();
-servoMotor.WritePulseWidth(1500); // 1.5ms; Approximately 90 degrees.
-Console.ReadKey();
+        using (var pwmChannel = PwmChannel.Create(0, servoPin, frequency))
+        {
+            pwmChannel.Start();
+            while (true)
+            {
+                // Позиция 0 градусов
+                pwmChannel.DutyCycle = 0.05;
+                Thread.Sleep(1000);
 
-servoMotor.WritePulseWidth(2000); // 2ms; Approximately 180 degrees.
+                // Позиция 90 градусов
+                pwmChannel.DutyCycle = 0.075;
+                Thread.Sleep(1000);
 
-servoMotor.Stop(); // Disable control signal.
+                // Позиция 180 градусов
+                pwmChannel.DutyCycle = 0.1;
+                Thread.Sleep(1000);
+            }
+        }
+    }
+}
